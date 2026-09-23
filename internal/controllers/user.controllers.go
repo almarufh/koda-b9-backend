@@ -14,65 +14,66 @@ type User struct {
 	UserService *services.ServiceUser
 }
 
-func NewUserController (us *services.ServiceUser) *User {
-	return  &User{
+func NewUserController(us *services.ServiceUser) *User {
+	return &User{
 		UserService: us,
 	}
 }
 
-func (u *User) Register ( c *gin.Context) {
+func (u *User) Register(c *gin.Context) {
 	var data dto.User
 	e := c.ShouldBindWith(&data, binding.JSON)
 
 	if e != nil {
-		c.JSON(http.StatusInternalServerError, dto.Response {
+		c.JSON(http.StatusInternalServerError, dto.Response{
 			Success: false,
 			Message: e.Error(),
-			Data: nil,
+			Data:    nil,
 		})
-		return 
+		return
 	}
 
 	if err := u.UserService.AddUser(data); err != nil {
-		c.JSON(http.StatusInternalServerError, dto.Response {
+		c.JSON(http.StatusInternalServerError, dto.Response{
 			Success: false,
 			Message: fmt.Sprintln(err),
-			Data: nil,
+			Data:    nil,
 		})
 	}
 
-	c.JSON(http.StatusOK, dto.Response {
+	c.JSON(http.StatusOK, dto.Response{
 		Success: true,
 		Message: fmt.Sprintf("register success : %s", data.Name),
-		Data: data,
+		Data:    data,
 	})
-  }
+}
 
-  func (u *User) Login ( c *gin.Context) {
+func (u *User) Login(c *gin.Context) {
+	fmt.Println(c.GetHeader("Origin"))
 	var data dto.Login
-	
+
 	if e := c.ShouldBindWith(&data, binding.JSON); e != nil {
-		c.JSON(http.StatusInternalServerError, dto.Response {
+		c.JSON(http.StatusInternalServerError, dto.Response{
 			Success: false,
 			Message: e.Error(),
-			Data: nil,
+			Data:    nil,
 		})
 		return
 	}
 
-	user, err := u.UserService.LoginServices(data); 
+	user, err := u.UserService.LoginServices(data)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, dto.Response {
+		c.JSON(http.StatusBadRequest, dto.Response{
 			Success: false,
 			Message: err.Error(),
-			Data: nil,
+			Data:    nil,
 		})
 		return
 	}
 
-	c.JSON(http.StatusOK, dto.Response {
+	c.JSON(http.StatusOK, dto.Response{
 		Success: true,
 		Message: "login success",
-		Data: user,
+		Data:    user,
 	})
-  }
+}

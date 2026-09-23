@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func initAuthRouters (r *gin.Engine) {
+func initAuthRouters(r *gin.Engine) {
 	us := services.NewUserService()
 	uc := controllers.NewUserController(us)
 

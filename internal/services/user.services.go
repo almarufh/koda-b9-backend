@@ -10,19 +10,19 @@ type ServiceUser struct {
 	users []dto.User
 }
 
-func NewUserService () *ServiceUser {
+func NewUserService() *ServiceUser {
 	return &ServiceUser{
-		users: []dto.User {
+		users: []dto.User{
 			{
-				Name: "Alma'ruf Hidayat",
-				Email: "admin@mail.com",
+				Name:     "Alma'ruf Hidayat",
+				Email:    "admin@mail.com",
 				Password: "12345678",
 			},
 		},
 	}
 }
 
-func (su *ServiceUser) AddUser (data dto.User) error {
+func (su *ServiceUser) AddUser(data dto.User) error {
 	if len(data.Password) < 8 {
 		return fmt.Errorf("length passwor minimum 8 character")
 	}
@@ -36,8 +36,8 @@ func (su *ServiceUser) AddUser (data dto.User) error {
 	return nil
 }
 
-func (su *ServiceUser) GetUserByEmail (e string) (dto.User, error){
-	for _,v := range su.users {
+func (su *ServiceUser) GetUserByEmail(e string) (dto.User, error) {
+	for _, v := range su.users {
 		if v.Email == e {
 			return v, nil
 		}
@@ -45,12 +45,12 @@ func (su *ServiceUser) GetUserByEmail (e string) (dto.User, error){
 	return dto.User{}, fmt.Errorf("%s not found !", e)
 }
 
-func (su *ServiceUser) LoginServices (data dto.Login) (dto.User, error) {
+func (su *ServiceUser) LoginServices(data dto.Login) (dto.User, error) {
 	user, err := su.GetUserByEmail(data.Email)
 	if err != nil {
 		return dto.User{}, fmt.Errorf("%s", err)
 	}
-	
+
 	if data.Password != user.Password {
 		return dto.User{}, fmt.Errorf("wrong password !")
 	}
